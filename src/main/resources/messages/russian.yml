@@ -1,0 +1,22 @@
+reload: "&aКонфигурации перезагружены"
+
+player-not-found: "Игрок <username> не найден"
+
+list:
+  header: ""
+  body: "<prefix> <username>"
+  footer: ""
+  empty: "Нет игроков в ванише"
+
+enable:
+  self: "Теперь находятся в режиме невидимости"
+  other:
+    sender: "Игрок <username> скрыт"
+    player: "Администратор <username> включил вам невидимость"
+
+disable:
+  all: "Все невидимые стали видимыми :)"
+  self: "Вы вышли из невидимости"
+  other:
+    sender: "Игрок <username> снова видим"
+    player: "Администратор <username> снял вам ваниш"
