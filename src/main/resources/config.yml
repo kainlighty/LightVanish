@@ -1,0 +1,19 @@
+# Only when the server starts
+update-notification: true
+
+#English, Russian
+language: RUSSIAN
+
+# LightVanish_isVanished - your vanish status
+# Require PlaceholderAPI
+placeholderAPIExpansions: true
+
+# After the change, a reboot is required
+abilities:
+  # With the status disable in the server menu, hidden players will not be included in the online count
+  # Paper or paper forks only
+  include-online-count: false
+  # Invisibility works by group weight
+  # --- Example: If your weight is 10, then players with a weight less than 10 will not see you
+  # Recommended = true
+  by-group-weight: true

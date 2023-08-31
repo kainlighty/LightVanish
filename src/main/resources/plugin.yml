@@ -1,0 +1,44 @@
+name: LightVanish
+version: '${project.version}'
+main: ru.kainlight.lightvanish.Main
+api-version: '1.17'
+author: kainlight
+depend:
+  - LuckPerms
+  - ProtocolLib
+softdepend:
+  - PlaceholderAPI
+loadbefore:
+  - PlaceholderAPI
+
+commands:
+  lightvanish:
+    permission: lightvanish.admin
+  vanish:
+    permission: lightvanish.use
+    aliases:
+      - lv
+      - v
+
+permissions:
+  lightvanish.use:
+    default: op
+  lightvanish.use.other:
+    default: op
+  lightvanish.list:
+    default: op
+  lightvanish.showall:
+    default: op
+  lightvanish.pickup:
+    default: op
+  lightvanish.reload:
+    default: op
+  lightvanish.admin:
+    default: op
+    children:
+      lightvanish.use: true
+      lightvanish.use.other: true
+      lightvanish.list: true
+      lightvanish.showall: true
+      lightvanish.reload: true
+
