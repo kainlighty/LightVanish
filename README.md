@@ -1,35 +1,36 @@
 # LightVanish
 
-## 		`rgb(9, 105, 218)` Dependencies: LuckPerms, ProtocolLib
+## Dependencies: LuckPerms, ProtocolLib
 > **Optional: PlaceholderAPI**
 
-## _Features:_
+## Features:
 1. #### Hiding by group weight
 2. #### Hiding in the online count (for paper)
 3. #### Hiding sounds and actions (for example, pressing plates, opening chests and etc.)
 
-## [_API_:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
-### Events:
-> ### _PlayerHideEvent:_
->- setMessage(); // _Maybe null or changed_
->- getMessage(); // _Not null_
->- isVanished();
->- getVanishedPlayers();
->- getVanishedPlayer();
->
+## [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
+### _PlayerHideEvent:_
+- setMessage(); // _Maybe null or changed_
+- getMessage(); // _Not null_
+- isVanished();
+- getVanishedPlayers();
+- getVanishedPlayer();
 > #### and other default methods
 
-> ### _PlayerShowEvent:_
->- setMessage(); // _Maybe null or changed_
->- getMessage(); // _Not null_
->- isVanished();
->- getVanishedPlayers();
->- getVanishedPlayer();
->- showAll();
->
+### _PlayerShowEvent_:
+- setMessage(); // _Maybe null or changed_
+- getMessage(); // _Not null_
+- isVanished();
+- getVanishedPlayers();
+- getVanishedPlayer();
+- showAll();
 > #### and other default methods
 
-### Methods
+### _Methods_
+- #### LightVanishAPI.getVanishedPlayers();
+- #### LightVanishAPI.getVanishedPlayer();
+- #### LightVanishAPI.showAll();
+- #### LightVanishAPI.removePacketListeners();
 ``` 
 Check for invisibility without using API:
 
@@ -37,10 +38,6 @@ boolean isVanished(Player player) {
     return player.hasMetadata("vanished");
 }
 ```
-> #### LightVanishAPI.getVanishedPlayers();
-> #### LightVanishAPI.getVanishedPlayer();
-> #### LightVanishAPI.showAll();
-> #### LightVanishAPI.removePacketListeners();
 
 ## _Additionally:_
 | Command              | Alias               | Permission            | Description                                  |
