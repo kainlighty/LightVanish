@@ -1,0 +1,10 @@
+name: Question
+description: Create a question
+labels: ["question"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Your question
+    validations:
+      required: true
