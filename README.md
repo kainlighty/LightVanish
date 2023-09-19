@@ -1,36 +1,44 @@
 # LightVanish
 
-## Dependencies: LuckPerms, ProtocolLib
-> **Optional: PlaceholderAPI**
+## Dependencies: LuckPerms
+> #### **Optional: PlaceholderAPI**
 
-## Features:
-1. #### Hiding by group weight
-2. #### Hiding in the online count (for paper)
-3. #### Hiding sounds and actions (for example, pressing plates, opening chests and etc.)
+## › Features:
 
-## [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
+1. #### Hiding by group weight: Multi-level invisibility support
+2. #### Hiding in the online count in server list _for paper_
+3. #### Hiding sounds and actions
+   _Example: chest, block, doors sound(not everything yet and only paper), and etc..._
+4. #### Prohibition on break of the specified blocks
+5. #### Disabling invisibility in certain worlds
+
+## › [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
+
 ### _PlayerHideEvent:_
-- setMessage(); // _Maybe null or changed_
-- getMessage(); // _Not null_
-- isVanished();
-- getVanishedPlayers();
-- getVanishedPlayer();
-> #### and other default methods
+
+- #### getVanishedPlayers();
+- #### getVanishedPlayer();
+- #### getViewers();
+- #### isTemporary();
+- #### isVanished();
 
 ### _PlayerShowEvent_:
-- setMessage(); // _Maybe null or changed_
-- getMessage(); // _Not null_
-- isVanished();
-- getVanishedPlayers();
-- getVanishedPlayer();
-- showAll();
-> #### and other default methods
+
+- #### getVanishedPlayers();
+- #### getVanishedPlayer();
+- #### isTemporary();
+- #### isVanished();
+- #### showAll();
 
 ### _Methods_
+
+- #### LightVanishAPI.getAllVanished();
 - #### LightVanishAPI.getVanishedPlayers();
-- #### LightVanishAPI.getVanishedPlayer();
+- #### LightVanishAPI.getVanishedPlayer():
+  #### player(), toggle(), hide(), show(), isTemporary(), getViewers()
+- #### LightVanishAPI.isVanished();
 - #### LightVanishAPI.showAll();
-- #### LightVanishAPI.removePacketListeners();
+
 ``` 
 Check for invisibility without using API:
 
@@ -39,14 +47,24 @@ boolean isVanished(Player player) {
 }
 ```
 
-## _Additionally:_
-| Command              | Alias               | Permission            | Description                                  |
-|----------------------|---------------------|-----------------------|----------------------------------------------|
-| vanish               | /lv or /v           | lightvanish.use       | Hide self                                    |
-| vanish <player\>     | /lv or /v <player\> | lightvanish.use.other | Hide player                                  |
-| lightvanish list     | None                | lightvanish.list      | See invisible players                        |
-| lightvanish show-all | None                | lightvanish.show-all  | Show all online players                      |
-| lightvanish reload   | None                | lightvanish.reload    | Reload all configurations                    |
-| lightvanish reconfig | None                | None                  | Update all configurations (only for console) |
-| None                 | None                | lightvanish.pickup    | Allow pickup items in invisible              |
-| None                 | None                | lightvanish.admin     | All rights                                   |
+## › Commands and Permissions
+
+| Command                         | Permission                       | Description                                          |
+|---------------------------------|----------------------------------|------------------------------------------------------|
+| lightvanish / lv                | lightvanish.use                  | Hide self ()                                         |
+| lightvanish <player\> (<time\>) | lightvanish.use.other            | Hide player or hide temporary, if time > 0           |
+| lightvanish list                | lightvanish.list                 | See all vanished players                             |
+| lightvanish show-all            | lightvanish.show-all             | Show all vanished players                            |
+| lightvanish reload              | None                             | Reload all configurations _(only for console)_       |
+| lightvanish reconfig            | None                             | Update all configurations _(only for console)_       |
+| None                            | lightvanish.use.*                | None                                                 |
+| None                            | lightvanish.silent.chest         | Allow chests to be opened quietly                    |
+| None                            | lightvanish.silent.chest.editing | Allow editing silent chest                           |
+| None                            | lightvanish.silent.*             | None                                                 |
+| None                            | lightvanish.bypass.worlds        | Allow to remain invisible in the disabled-worlds     |
+| None                            | lightvanish.bypass.world.<name\> | Allow you to remain invisible in the specified world |
+| None                            | lightvanish.bypass.physical      | Allow pressure plates to be pressed and etc...       |
+| None                            | lightvanish.bypass.place         | Allow blocks place in invisible                      |
+| None                            | lightvanish.bypass.pickup        | Allow pickup items in invisible                      |
+| None                            | lightvanish.bypass.*             | None                                                 |
+| None                            | lightvanish.*                    | All rights                                           |
