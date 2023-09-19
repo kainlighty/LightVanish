@@ -1,4 +1,4 @@
-![invisible2](https://github.com/kainlighty/LightVanish/assets/111251772/3a68dee8-179b-4ae4-9bc7-bf82c54879b1)
+# LightVanish
 
 ## Dependencies: LuckPerms
 > #### **Optional: PlaceholderAPI**
