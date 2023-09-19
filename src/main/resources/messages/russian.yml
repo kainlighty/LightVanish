@@ -1,22 +1,23 @@
-reload: "&aКонфигурации перезагружены"
-
-player-not-found: "Игрок <username> не найден"
+player-offline: "&c&l » &fИгрок <username> оффлайн"
+player-not-found: "&c&l » &fИгрок <username> не найден"
 
 list:
-  header: ""
-  body: "<prefix> <username>"
-  footer: ""
-  empty: "Нет игроков в ванише"
+  header: " &m   &9&l СКРЫТЫЕ ИГРОКИ: &r&m   "
+  body: "&8- &r <prefix> <username>"
+  footer: "&7Всего в ванише: <count>"
+  empty: "&c&mНет игроков в ванише"
+  time: "&e&lВРЕМЯ В НЕВИДИМОСТИ: <minutes>м. <seconds>с."
 
 enable:
-  self: "Теперь находятся в режиме невидимости"
+  actionbar: "&9&lНЕВИДИМОСТЬ ВКЛЮЧЕНА"
+  self: "&9&l » &fВы вошли в режим невидимости"
   other:
-    sender: "Игрок <username> скрыт"
-    player: "Администратор <username> включил вам невидимость"
+    sender: "&9&l » &fИгрок <username> скрыт"
+    player: "&b&l » &fАдминистратор <username> включил вам невидимость"
 
 disable:
-  all: "Все невидимые стали видимыми :)"
-  self: "Вы вышли из невидимости"
+  all: "&a&l » &fВсе невидимые стали видимыми :)"
+  self: "&9&l » &fВы вышли из режима невидимости"
   other:
-    sender: "Игрок <username> снова видим"
-    player: "Администратор <username> снял вам ваниш"
+    sender: "&9&l » &fИгрок <username> снова видим"
+    player: "&b&l » &fАдминистратор <username> снял вам ваниш"

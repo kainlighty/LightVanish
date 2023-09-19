@@ -1,19 +1,36 @@
-# Only when the server starts
+# Only when the server loading
 update-notification: true
 
 #English, Russian
-language: RUSSIAN
+language: English
 
-# LightVanish_isVanished - your vanish status
-# Require PlaceholderAPI
-placeholderAPIExpansions: true
-
-# After the change, a reboot is required
 abilities:
-  # With the status disable in the server menu, hidden players will not be included in the online count
+  prevent-join-quit-message: true #  !The change requires a server reboot
+  # ---------------------------------------------------------------------
+  # With the status FALSE in the server menu, hidden players will not be included in the online count
   # Paper or paper forks only
-  include-online-count: false
+  include-in-online-count: true # ! The change requires a server reboot
+  # ---------------------------------------------------------------------
   # Invisibility works by group weight
   # --- Example: If your weight is 10, then players with a weight less than 10 will not see you
   # Recommended = true
-  by-group-weight: true
+  by-group-weight: true # ! The change requires a server reboot
+  # ---------------------------------------------------------------------
+  animations: true
+  # ---------------------------------------------------------------------
+  # If the player moves to the specified worlds, then he comes out of invisibility
+  # Except players with permission: lightvanish.bypass.world.<NAME> or lightvanish.bypass.worlds
+  disabled-worlds: # ! The change requires a server reboot
+    - 'test'
+  # ---------------------------------------------------------------------
+  # These blocks cannot be placed in vanished
+  # Except players with permission: lightvanish.bypass.place
+  blocked-place:
+    - barrier
+    - bedrock
+    - diamond_ore
+    - emerald_ore
+    - golden_ore
+    - golden_block
+    - emerald_block
+    - diamond_block

@@ -1,217 +1,165 @@
 package ru.kainlight.lightvanish.LISTENERS;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
+import ru.kainlight.lightvanish.API.VanishedPlayer;
+import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
+import ru.kainlight.lightvanish.UTILS.Runnables;
 
-import java.util.UUID;
+public final class PlayerListener implements Listener {
 
-public final class PlayerListener extends PacketAdapter implements Listener {
-
-    private final Main plugin;
-
-    public PlayerListener(Main plugin) {
-        super(plugin, ListenerPriority.NORMAL,
-                PacketType.Play.Server.BLOCK_ACTION,
-                PacketType.Play.Server.WORLD_EVENT,
-                PacketType.Play.Server.WORLD_PARTICLES, PacketType.Play.Server.ENTITY_EFFECT,
-                PacketType.Play.Server.ENTITY_LOOK);
-        this.plugin = plugin;
-        //onVanishedPlayerPresence();
+    public PlayerListener() {
+        new PaperListener(Main.getInstance());
     }
 
-    @EventHandler
-    public void onPlayerVanishedJoin(PlayerJoinEvent event) {
-        LightVanishAPI.get().getVanished().forEach(hiderUUID -> {
-            Player hider = plugin.getServer().getPlayer(hiderUUID);
-            if (hider != null) {
-                LightVanishAPI.get().getVanishedPlayer(hider).hide();
-                event.joinMessage(null);
-            }
-        });
-    }
-
-    @Override
-    public void onPacketSending(PacketEvent event) {
-        if (event.getPacketType() == PacketType.Play.Server.BLOCK_ACTION ||
-                event.getPacketType() == PacketType.Play.Server.WORLD_EVENT || event.getPacketType() == PacketType.Play.Server.WORLD_PARTICLES ||
-                event.getPacketType() == PacketType.Play.Server.ENTITY_EFFECT || event.getPacketType() == PacketType.Play.Server.ENTITY_LOOK) {
-            Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
-
-            if (isVanished(uuid)) {
-                event.setCancelled(true);
-            }
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerVanishedReHide(PlayerJoinEvent event) {
+        if (!LightVanishAPI.get().getOnlineVanishedPlayers().isEmpty()) {
+            LightVanishAPI.get().getOnlineVanishedPlayers().forEach(VanishedPlayer::hide);
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerVanishedJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
 
-    /*private void onVanishedPlayerPresence() {
-            ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(plugin, ListenerPriority.NORMAL,
-                    PacketType.Play.Server.BLOCK_ACTION,
-                    PacketType.Play.Server.WORLD_EVENT,
-                    PacketType.Play.Server.WORLD_PARTICLES, PacketType.Play.Server.ENTITY_EFFECT,
-                    PacketType.Play.Server.ENTITY_LOOK) {
-                @Override
-                public void onPacketSending(PacketEvent event) {
-                    if (event.getPacketType() == PacketType.Play.Server.BLOCK_ACTION ||
-                            event.getPacketType() == PacketType.Play.Server.WORLD_EVENT || event.getPacketType() == PacketType.Play.Server.WORLD_PARTICLES ||
-                            event.getPacketType() == PacketType.Play.Server.ENTITY_EFFECT || event.getPacketType() == PacketType.Play.Server.ENTITY_LOOK) {
-                        Player player = event.getPlayer();
-                        UUID uuid = player.getUniqueId();
-
-                        if (isVanished(uuid)) {
-                            event.setCancelled(true);
-                        }
-                    }
-                }
-            });
-
-    }*/
+        if (ConfigHolder.get().isPreventJoinAndQuitMessage() && LightVanishAPI.get().isVanished(player)) {
+            event.setJoinMessage(null);
+        }
+    }
 
     @EventHandler
     public void onPlayerVanishedQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
 
-        if (isVanished(uuid)) {
-            event.quitMessage(null);
+        if (ConfigHolder.get().isPreventJoinAndQuitMessage() && LightVanishAPI.get().isVanished(player)) {
+            Runnables.getMethods().stopTimer(player);
+            event.setQuitMessage(null);
         }
     }
 
     @EventHandler
     public void onPlayerVanishedKick(PlayerKickEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
 
-        if (isVanished(uuid)) {
+        if (LightVanishAPI.get().isVanished(player)) {
+            Runnables.getMethods().stopTimer(player);
             player.removePotionEffect(PotionEffectType.NIGHT_VISION);
             player.resetPlayerWeather();
         }
     }
 
     @EventHandler
-    public void onPlayerVanishedHunger(FoodLevelChangeEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
+    public void onVanishedPlayerAnimation(PlayerAnimationEvent event) {
+        if(ConfigHolder.get().animationsEnabled()) {
+            isVanishedCancelled(event.getPlayer(), event);
         }
     }
 
     @EventHandler
-    public void onVanishedPlayerPickupItems(EntityPickupItemEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid) && !player.hasPermission("lightvanish.pickup")) {
-            event.setCancelled(true);
-        }
+    public void onVanishedPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("lightvanish.bypass.physical")) return;
+        if (!event.getAction().equals(Action.PHYSICAL)) return;
+        isVanishedCancelled(player, event);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onInteract(PlayerInteractEvent event) {
+    @EventHandler
+    public void onVanishedPlayerChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        Block clickedBlock = event.getClickedBlock();
-        boolean physicalAction = event.getAction().equals(Action.PHYSICAL);
+        String newWorldName = event.getFrom().getName().toLowerCase();
 
-        if (isVanished(uuid) && clickedBlock != null && physicalAction) {
-            String blockName = clickedBlock.getType().getKey().getKey();
-
-            if (blockName.contains("pressure_plate")) {
-                event.setCancelled(true);
+        if (!player.hasPermission("lightvanish.bypass.world." + newWorldName) || !player.hasPermission("lightvanish.bypass.worlds")) {
+            if (LightVanishAPI.get().isVanished(player)) {
+                if (!ConfigHolder.get().getDisabledWorlds().isEmpty() && ConfigHolder.get().getDisabledWorlds().contains(newWorldName)) {
+                    LightVanishAPI.get().getVanishedPlayer(player).show();
+                }
             }
         }
 
     }
 
     @EventHandler
+    public void onVanishedPlayerPickupItems(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if(player.hasPermission("lightvanish.bypass.pickup")) return;
+        isVanishedCancelled(player, event);
+    }
+
+    @EventHandler
     public void onVanishedPlayerPickupArrow(PlayerPickupArrowEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        if(player.hasPermission("lightvanish.bypass.pickup")) return;
+        isVanishedCancelled(player, event);
+    }
 
-        if (isVanished(uuid) && !player.hasPermission("lightvanish.pickup")) {
-            event.setCancelled(true);
-        }
+    @EventHandler
+    public void onPlayerVanishedHunger(FoodLevelChangeEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onVanishedPlayerBedEnter(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onVanishedPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onPlayerVanishedPickupExperience(PlayerPickupExperienceEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
-        }
+        isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onPlayerVanishedDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        UUID uuid = player.getUniqueId();
+        isVanishedCancelled(player, event);
+    }
 
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
-        }
+    @EventHandler
+    public void onPlayerVanishedDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onPlayerVanishedEntityTarget(EntityTargetEvent event) {
         if (!(event.getTarget() instanceof Player player)) return;
-        UUID uuid = player.getUniqueId();
-
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
-        }
+        isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onPlayerVanishedLivingEntityTarget(EntityTargetLivingEntityEvent event) {
         if (!(event.getTarget() instanceof Player player)) return;
-        UUID uuid = player.getUniqueId();
+        isVanishedCancelled(player, event);
+    }
 
-        if (isVanished(uuid)) {
-            event.setCancelled(true);
+    @EventHandler
+    public void onPlayerVanishedBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+
+        if (LightVanishAPI.get().isVanished(player) && !player.hasPermission("lightvanish.bypass.place")) {
+            String blockName = event.getBlockPlaced().getType().name().toLowerCase();
+
+            if (!ConfigHolder.get().getBlockedPlace().isEmpty() && ConfigHolder.get().getBlockedPlace().contains(blockName)) {
+                event.setCancelled(true);
+            }
         }
     }
 
-    private boolean isVanished(UUID uuid) {
-        return LightVanishAPI.get().getVanished().contains(uuid);
+
+
+    private boolean isVanishedCancelled(Player player, Cancellable event) {
+        if (LightVanishAPI.get().isVanished(player)) {
+            event.setCancelled(true);
+        }
+        return event.isCancelled();
     }
+
 
 }

@@ -1,22 +1,23 @@
-reload: "&aКонфигурации перезагружены"
-
-player-not-found: "Игрок <username> не найден"
+player-offline: "&c&l » &fPlayer <username> is offline"
+player-not-found: "&c&l » &fPlayer <username> not found"
 
 list:
-  header: ""
-  body: "<prefix> <username>"
-  footer: ""
-  empty: "Нет игроков в ванише"
+  header: " &m   &9&l VANISHED PLAYERS &r&m   "
+  body: "&8- &r<prefix> <username>"
+  footer: "&7 Total in vanish: <count>"
+  empty: "&c&mThere are no players in vanish"
+  time: "&e&lVANISHED TIME: <minutes>m. <seconds>s."
 
 enable:
-  self: "Теперь находятся в режиме невидимости"
+  actionbar: "&9&lYOUR VANISHED"
+  self: "&9&l » &fYou have entered invisibility mode"
   other:
-    sender: "Игрок <username> скрыт"
-    player: "Администратор <username> включил вам невидимость"
+    sender: "&9&l » &fPlayer <username> is vanished"
+    player: "&b&l » &fStaff <username> enabled vanish for you"
 
 disable:
-  all: "Все невидимые стали видимыми :)"
-  self: "Вы вышли из невидимости"
+  all: "&a&l » &fAll the invisible have become visible :)"
+  self: "&9&l » &fYou are out of invisibility mode"
   other:
-    sender: "Игрок <username> снова видим"
-    player: "Администратор <username> снял вам ваниш"
+    sender: "&9&l » &fPlayer <username> unvanished"
+    player: "&b&l » &fStaff <username> disable vanish mode for you"
