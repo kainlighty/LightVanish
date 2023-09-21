@@ -117,7 +117,7 @@ public final class Vanish implements CommandExecutor {
                     }
 
                     if(sender instanceof Player hider) {
-                        if (!HLuckPerms.get().checkGroupWeight(hider.getUniqueId(), player.getUniqueId())) {
+                        if (HLuckPerms.get().checkGroupWeight(hider.getUniqueId(), player.getUniqueId())) {
                             LightPlayer.of(sender).sendMessage(ConfigHolder.get().playerProtectedMessage().replace("<username>", playerName));
                             return true;
                         }
