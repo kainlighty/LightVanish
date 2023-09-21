@@ -31,6 +31,8 @@ final class GitHubUpdater {
     private String resourceURL;
 
     private boolean checkForUpdates() {
+        if(!plugin.getConfig().getBoolean("update-notification")) return false;
+
         String githubRepo = "kainlighty/" + pluginName;
         try {
             String url = "https://api.github.com/repos/" + githubRepo + "/releases";
@@ -99,8 +101,6 @@ final class GitHubUpdater {
     }
 
     public void start() {
-        if(!plugin.getConfig().getBoolean("update-notification")) return;
-
         if (checkForUpdates()) {
             String newVersion = latestVersion;
             if (isPrerelease) newVersion += " #d29922(Pre-release)";

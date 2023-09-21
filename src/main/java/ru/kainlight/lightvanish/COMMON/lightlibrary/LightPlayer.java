@@ -22,13 +22,11 @@ public final class LightPlayer {
 
     private static final BukkitAudiences audience = BukkitAudiences.create(Main.getInstance());
     private final Audience sender;
+
     private LightPlayer(CommandSender sender) {
         this.sender = audience.sender(sender);
     }
 
-    public static Audience get(CommandSender sender) {
-        return audience.sender(sender);
-    }
     public static LightPlayer of(CommandSender sender) {
         return new LightPlayer(sender);
     }
@@ -142,6 +140,10 @@ public final class LightPlayer {
         if(messages.isEmpty()) return;
 
         sendMessageForAll(messages);
+    }
+
+    public static Audience toAudience(CommandSender sender) {
+        return audience.sender(sender);
     }
 
 }

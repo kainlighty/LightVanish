@@ -16,7 +16,20 @@ abilities:
   # Recommended = true
   by-group-weight: true # ! The change requires a server reboot
   # ---------------------------------------------------------------------
-  animations: true
+  animations: true  # ! The change requires a server reboot
+  # ---------------------------------------------------------------------
+  # Require default values;
+  # complicated: false - change on spectator mode and back previous
+  # complicated: true - fake synchronized inventory
+  # interval - time to change previous gamemode or update interval for fake chest inventory
+  #
+  # Permissions:
+  # lightvanish.silent.chest
+  # lightvanish.silent.chest.editing
+  # lightvanish.silent.chest.*
+  silent-chest: # ! The change requires a server reboot
+    complicated: false
+    interval: 0
   # ---------------------------------------------------------------------
   # If the player moves to the specified worlds, then he comes out of invisibility
   # Except players with permission: lightvanish.bypass.world.<NAME> or lightvanish.bypass.worlds

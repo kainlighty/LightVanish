@@ -15,6 +15,7 @@ import ru.kainlight.lightvanish.Main;
 import ru.kainlight.lightvanish.UTILS.Runnables;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class VanishedPlayer {
@@ -89,6 +90,10 @@ public final class VanishedPlayer {
         return plugin.getServer().getOnlinePlayers().stream().filter(player -> player.canSee(hider)).toList();
     }
 
+    public boolean isVanished() {
+        return LightVanishAPI.get().isVanished(player());
+    }
+
     public boolean isTemporary() {
         return Runnables.getMethods().getTempTimerTask().containsKey(hider);
     }
@@ -122,5 +127,28 @@ public final class VanishedPlayer {
         var event = new LightVanishAPI.PlayerShowEvent(hider);
         plugin.getServer().getPluginManager().callEvent(event);
         return event.isCancelled();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VanishedPlayer that = (VanishedPlayer) o;
+        return vanishedTime == that.vanishedTime && Objects.equals(hider, that.hider);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hider, vanishedTime);
+    }
+
+    @Override
+    public String toString() {
+        return "VanishedPlayer{" +
+                "player=" + hider +
+                " isVanished=" + isVanished() +
+                " isTemporary=" + isTemporary() +
+                ", vanishedTime=" + vanishedTime +
+                '}';
     }
 }

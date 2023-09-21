@@ -16,15 +16,14 @@ public final class ConfigHolder {
     private boolean includeInOnlineCount = Main.getInstance().getConfig().getBoolean("abilities.include-in-online-count");
     private boolean byGroupWeight = Main.getInstance().getConfig().getBoolean("abilities.by-group-weight");
     private List<String> disabledWorlds = Main.getInstance().getConfig().getStringList("abilities.disabled-worlds");
+    private final boolean animationsEnabled = Main.getInstance().getConfig().getBoolean("abilities.animations");
+
+    private final int silentChestMode = Main.getInstance().getConfig().getInt("abilities.silent-chest.mode");
+    private final int silentChestUpdateInterval = Main.getInstance().getConfig().getInt("abilities.silent-chest.interval");
 
     public List<String> getBlockedPlace() {
         List<String> blockedPlace = Main.getInstance().getConfig().getStringList("abilities.blocked-place");
         return blockedPlace;
-    }
-
-    public boolean animationsEnabled() {
-        boolean status = Main.getInstance().getConfig().getBoolean("abilities.animations");
-        return status;
     }
 
     public String vanishEnableForOtherSenderMessage() {
@@ -58,6 +57,10 @@ public final class ConfigHolder {
         return message;
     }
 
+    public String playerProtectedMessage() {
+        String message = Main.getInstance().getMessageConfig().getConfig().getString("player-protected");
+        return message;
+    }
 
     public String playerOfflineMessage() {
         String message = Main.getInstance().getMessageConfig().getConfig().getString("player-offline");

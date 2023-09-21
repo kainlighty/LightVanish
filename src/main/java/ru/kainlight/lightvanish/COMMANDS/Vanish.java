@@ -75,6 +75,7 @@ public final class Vanish implements CommandExecutor {
             }
 
             case "reload" -> {
+                if (sender instanceof Player) return true;
                 plugin.saveDefaultConfig();
                 plugin.getMessageConfig().saveDefaultConfig();
 
@@ -86,6 +87,7 @@ public final class Vanish implements CommandExecutor {
             }
 
             case "reconfig" -> {
+                if (sender instanceof Player) return true;
                 plugin.saveDefaultConfig();
                 plugin.getMessageConfig().saveDefaultConfig();
 
@@ -93,6 +95,7 @@ public final class Vanish implements CommandExecutor {
                 plugin.getMessageConfig().updateConfig();
 
                 plugin.getLogger().info("Configurations updated");
+                plugin.getLogger().warning("If the hints have been removed, you can view them on the Github");
                 return true;
             }
 
@@ -111,6 +114,13 @@ public final class Vanish implements CommandExecutor {
                     if (player == null) {
                         LightPlayer.of(sender).sendMessage(ConfigHolder.get().playerOfflineMessage().replace("<username>", playerName));
                         return true;
+                    }
+
+                    if(sender instanceof Player hider) {
+                        if (!HLuckPerms.get().checkGroupWeight(hider.getUniqueId(), player.getUniqueId())) {
+                            LightPlayer.of(sender).sendMessage(ConfigHolder.get().playerProtectedMessage().replace("<username>", playerName));
+                            return true;
+                        }
                     }
 
                     VanishedPlayer vanishedPlayer = LightVanishAPI.get().getVanishedPlayer(player);
@@ -155,12 +165,12 @@ public final class Vanish implements CommandExecutor {
                 String finalBody = body;
 
                 Player player = vanishedPlayer.player();
-                finalBody = finalBody.replace("<username>", vanishedPlayer.player().getName());
+                finalBody = finalBody.replace("<username>", player.getName());
                 Long vanishedMinutes = TimeUnit.SECONDS.toMinutes(vanishedPlayer.getVanishedTime());
                 Long vanishedSeconds = TimeUnit.SECONDS.toSeconds(vanishedPlayer.getVanishedTime());
 
                 if (finalBody.contains("<prefix>")) {
-                    UUID uuid = vanishedPlayer.player().getUniqueId();
+                    UUID uuid = player.getUniqueId();
                     String prefix = HLuckPerms.get().getPlayerPrefix(uuid);
                     finalBody = finalBody.replace("<prefix>", prefix);
                 }

@@ -16,9 +16,13 @@ import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 import ru.kainlight.lightvanish.UTILS.Runnables;
 
+@SuppressWarnings("deprecation")
 public final class PlayerListener implements Listener {
 
-    public PlayerListener() {
+    private final Main plugin;
+
+    public PlayerListener(Main plugin) {
+        this.plugin = plugin;
         new PaperListener(Main.getInstance());
     }
 
@@ -61,7 +65,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     public void onVanishedPlayerAnimation(PlayerAnimationEvent event) {
-        if(ConfigHolder.get().animationsEnabled()) {
+        if (ConfigHolder.get().isAnimationsEnabled()) {
             isVanishedCancelled(event.getPlayer(), event);
         }
     }
@@ -70,16 +74,17 @@ public final class PlayerListener implements Listener {
     public void onVanishedPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         if(player.hasPermission("lightvanish.bypass.physical")) return;
-        if (!event.getAction().equals(Action.PHYSICAL)) return;
+        if(!event.getAction().equals(Action.PHYSICAL)) return;
         isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onVanishedPlayerChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
+        if (player.hasPermission("lightvanish.bypass.worlds")) return;
         String newWorldName = event.getFrom().getName().toLowerCase();
 
-        if (!player.hasPermission("lightvanish.bypass.world." + newWorldName) || !player.hasPermission("lightvanish.bypass.worlds")) {
+        if (!player.hasPermission("lightvanish.bypass.world." + newWorldName)) {
             if (LightVanishAPI.get().isVanished(player)) {
                 if (!ConfigHolder.get().getDisabledWorlds().isEmpty() && ConfigHolder.get().getDisabledWorlds().contains(newWorldName)) {
                     LightVanishAPI.get().getVanishedPlayer(player).show();
@@ -92,14 +97,14 @@ public final class PlayerListener implements Listener {
     @EventHandler
     public void onVanishedPlayerPickupItems(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if(player.hasPermission("lightvanish.bypass.pickup")) return;
+        if (player.hasPermission("lightvanish.bypass.pickup")) return;
         isVanishedCancelled(player, event);
     }
 
     @EventHandler
     public void onVanishedPlayerPickupArrow(PlayerPickupArrowEvent event) {
         Player player = event.getPlayer();
-        if(player.hasPermission("lightvanish.bypass.pickup")) return;
+        if (player.hasPermission("lightvanish.bypass.pickup")) return;
         isVanishedCancelled(player, event);
     }
 
@@ -151,7 +156,6 @@ public final class PlayerListener implements Listener {
             }
         }
     }
-
 
 
     private boolean isVanishedCancelled(Player player, Cancellable event) {

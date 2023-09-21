@@ -3,7 +3,7 @@ version: '${project.version}'
 main: ru.kainlight.lightvanish.Main
 api-version: 1.16
 author: kainlight
-depend: [LuckPerms]
+depend: [LuckPerms, ProtocolLib]
 softdepend: [PlaceholderAPI]
 
 commands:
@@ -52,6 +52,7 @@ permissions:
     default: op
     children:
       lightvanish.list: true
+      lightvanish.protected: true
       lightvanish.use.*: true
       lightvanish.silent.*: true
       lightvanish.bypass.*: true

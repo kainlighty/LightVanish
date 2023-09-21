@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import ru.kainlight.lightvanish.Main;
 
@@ -20,6 +21,9 @@ public final class LightVanishAPI {
 
     @Getter
     private final Map<UUID, VanishedPlayer> allVanished = new HashMap<>();
+
+    @Getter
+    private final Map<Player, Inventory> silentChests = new HashMap<>();
 
     public static LightVanishAPI get() {
         return lightVanishAPI;
@@ -52,6 +56,10 @@ public final class LightVanishAPI {
 
     public void showAll() {
         getOnlineVanishedPlayers().forEach(VanishedPlayer::show);
+    }
+
+    public void setSilentChest(Player player, Inventory inventory) {
+        silentChests.put(player, inventory);
     }
 
 
