@@ -47,6 +47,8 @@ boolean isVanished(Player player) {
     return player.hasMetadata("vanished");
 }
 ```
+## › Placeholders:
+- %LightVanish_isVanished%
 
 ## › Commands and Permissions
 
@@ -127,7 +129,7 @@ abilities:
 </details>
 
 <details>
-  <summary>MESSAGES CONFIGURATION</summary>
+  <summary>MESSAGES</summary>
 
 ```
 player-offline: "&c&l » &fPlayer <username> is offline"
