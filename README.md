@@ -58,6 +58,7 @@ boolean isVanished(Player player) {
 | lightvanish / lv                | lightvanish.use                  | Hide self                                            |
 | lightvanish <player\> (<time\>) | lightvanish.use.other            | Hide player or hide temporary, if time > 0           |
 | lightvanish list                | lightvanish.list                 | See all vanished players                             |
+| lightvanish settings            | lightvanish.settings             | Allow to open the settings menu with abilities       |
 | lightvanish show-all            | lightvanish.show-all             | Show all vanished players                            |
 | lightvanish reload              | None                             | Reload all configurations _(only for console)_       |
 | lightvanish reconfig            | None                             | Update all configurations _(only for console)_       |
