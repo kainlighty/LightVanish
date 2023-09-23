@@ -7,11 +7,11 @@ import ru.kainlight.lightvanish.API.LightVanishAPI;
 import ru.kainlight.lightvanish.COMMANDS.Vanish;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.CONFIGS.BukkitConfig;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.UTILS.Initiators;
+import ru.kainlight.lightvanish.GUI.SettingsGUI;
 import ru.kainlight.lightvanish.HOOKS.PlaceholderAPI.HPlaceholderAPI;
 import ru.kainlight.lightvanish.LISTENERS.PlayerListener;
 import ru.kainlight.lightvanish.LISTENERS.silentChest.silentChestComplicatedListener;
 import ru.kainlight.lightvanish.LISTENERS.silentChest.silentChestListener;
-import ru.kainlight.lightvanish.UTILS.Runnables;
 
 @Getter
 @Internal
@@ -21,11 +21,13 @@ public final class Main extends JavaPlugin {
     private static Main instance;
 
     public BukkitConfig messageConfig;
+    @Getter private BukkitConfig guiConfig;
 
     @Override
     public void onLoad() {
         this.saveDefaultConfig();
         BukkitConfig.saveLanguages(this, "language");
+        this.guiConfig = new BukkitConfig(this, "gui", "config.yml");
     }
 
     @Override
@@ -34,6 +36,7 @@ public final class Main extends JavaPlugin {
 
         this.getCommand("lightvanish").setExecutor(new Vanish(this));
         this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new SettingsGUI(this), this);
         registerSilentChest();
 
         HPlaceholderAPI.get().loadPlaceholderAPIAndSaveSections();
@@ -45,7 +48,6 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
         LightVanishAPI.get().getAllVanished().clear();
-        Runnables.getMethods().stopAll();
     }
 
     private void registerSilentChest() {

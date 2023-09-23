@@ -7,27 +7,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import ru.kainlight.lightvanish.Main;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
+@Getter
 public final class LightVanishAPI {
 
     private LightVanishAPI() {}
     private static final LightVanishAPI lightVanishAPI = new LightVanishAPI();
-
-    @Getter
-    private final Map<UUID, VanishedPlayer> allVanished = new HashMap<>();
-
-    @Getter
-    private final Map<Player, Inventory> silentChests = new HashMap<>();
-
     public static LightVanishAPI get() {
         return lightVanishAPI;
     }
+
+    private final Map<UUID, VanishedPlayer> allVanished = new HashMap<>();
+    private final Map<UUID, Settings> vanishedSettings = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     public Set<VanishedPlayer> getOnlineVanishedPlayers() {
@@ -47,10 +44,10 @@ public final class LightVanishAPI {
 
     public boolean isVanished(Player player) {
         if(player == null) return false;
-        return LightVanishAPI.get().getAllVanished().containsKey(player.getUniqueId());
+        return LightVanishAPI.get().getOnlineVanishedPlayers().contains(getVanishedPlayer(player));
     }
 
-    public boolean isVanished(@NotNull UUID uuid) {
+    public boolean isVanished(UUID uuid) {
         return LightVanishAPI.get().getAllVanished().containsKey(uuid);
     }
 
@@ -58,19 +55,16 @@ public final class LightVanishAPI {
         getOnlineVanishedPlayers().forEach(VanishedPlayer::show);
     }
 
-    public void setSilentChest(Player player, Inventory inventory) {
-        silentChests.put(player, inventory);
-    }
 
 
 
 
 
-
+    @Getter
     public static final class PlayerHideEvent extends PlayerEvent implements Cancellable {
 
         private static final HandlerList handlers = new HandlerList();
-        @Getter @Setter
+        @Setter
         private boolean isCancelled = false;
 
         public PlayerHideEvent(Player player) {
@@ -93,8 +87,8 @@ public final class LightVanishAPI {
             return LightVanishAPI.get().isVanished(player);
         }
 
-        public boolean isTemporary() {
-            return getVanishedPlayer().isTemporary();
+        public Settings getSettings() {
+            return getVanishedPlayer().getSettings();
         }
 
         public void showAll() {
@@ -111,10 +105,11 @@ public final class LightVanishAPI {
         }
     }
 
+    @Getter
     public static final class PlayerShowEvent extends PlayerEvent implements Cancellable {
 
         private static final HandlerList handlers = new HandlerList();
-        @Getter @Setter
+        @Setter
         private boolean isCancelled = false;
 
         public PlayerShowEvent(Player player) {
@@ -133,8 +128,8 @@ public final class LightVanishAPI {
             return LightVanishAPI.get().isVanished(player);
         }
 
-        public boolean isTemporary() {
-            return getVanishedPlayer().isTemporary();
+        public Settings getSettings() {
+            return getVanishedPlayer().getSettings();
         }
 
         @Override

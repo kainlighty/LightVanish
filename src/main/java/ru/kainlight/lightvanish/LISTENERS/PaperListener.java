@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
+import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.Main;
 
 import java.util.stream.Collectors;
@@ -48,7 +49,9 @@ final class PaperListener implements Listener {
     public void onPlayerVanishedPickupExperience(PlayerPickupExperienceEvent event) {
         Player player = event.getPlayer();
 
-        if (LightVanishAPI.get().isVanished(player) && !player.hasPermission("lightvanish.bypass.pickup")) {
+        Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+        if(settings == null) return;
+        if (LightVanishAPI.get().isVanished(player) && settings.isPickup()) {
             event.setCancelled(true);
         }
     }

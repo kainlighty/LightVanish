@@ -16,17 +16,13 @@ abilities:
   # Recommended = true
   by-group-weight: true # ! The change requires a server reboot
   # ---------------------------------------------------------------------
-  animations: true  # ! The change requires a server reboot
-  # ---------------------------------------------------------------------
-  # Require default values;
+  # Require default values
   # complicated: false - change on spectator mode and back previous
   # complicated: true - fake synchronized inventory
   # interval - time to change previous gamemode or update interval for fake chest inventory
   #
   # Permissions:
-  # lightvanish.silent.chest
-  # lightvanish.silent.chest.editing
-  # lightvanish.silent.chest.*
+  # lightvanish.chest.editing
   silent-chest: # ! The change requires a server reboot
     complicated: false
     interval: 0
@@ -47,3 +43,4 @@ abilities:
     - golden_block
     - emerald_block
     - diamond_block
+

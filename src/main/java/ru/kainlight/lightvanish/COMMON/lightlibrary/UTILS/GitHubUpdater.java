@@ -50,9 +50,9 @@ final class GitHubUpdater {
                 responseBuilder.append(line);
             }
             reader.close();
-            input.close(); // ! added
+            input.close();
 
-            JsonElement jsonElement = JsonParser.parseString(responseBuilder.toString());
+            JsonElement jsonElement = new JsonParser().parse(responseBuilder.toString());
             JsonArray jsonArray = jsonElement.getAsJsonArray();
             JsonObject latestRelease = jsonArray.get(0).getAsJsonObject();  // Получаем последний релиз
 

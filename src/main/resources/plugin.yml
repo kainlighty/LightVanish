@@ -3,7 +3,7 @@ version: '${project.version}'
 main: ru.kainlight.lightvanish.Main
 api-version: 1.16
 author: kainlight
-depend: [LuckPerms, ProtocolLib]
+depend: [LuckPerms]
 softdepend: [PlaceholderAPI]
 
 commands:
@@ -14,20 +14,7 @@ commands:
       - v
 
 permissions:
-  lightvanish.silent.chest:
-    default: op
-  lightvanish.silent.chest.editing:
-    default: op
-  lightvanish.silent.*:
-    default: op
-    children:
-      lightvanish.silent.chest: true
-      lightvanish.silent.chest.editing: true
-  lightvanish.bypass.physical:
-    default: op
   lightvanish.bypass.worlds:
-    default: op
-  lightvanish.bypass.pickup:
     default: op
   lightvanish.bypass.place:
     default: op
@@ -35,9 +22,9 @@ permissions:
     default: op
     children:
       lightvanish.bypass.worlds: true
-      lightvanish.bypass.pickup: true
       lightvanish.bypass.place: true
-      lightvanish.bypass.physical: true
+  lightvanish.settings:
+    default: op
   lightvanish.use:
     default: op
   lightvanish.use.other:
@@ -48,13 +35,16 @@ permissions:
     default: op
   lightvanish.show-all:
     default: op
+  lightvanish.chest.editing:
+    default: op
   lightvanish.*:
     default: op
     children:
       lightvanish.list: true
       lightvanish.protected: true
       lightvanish.use.*: true
-      lightvanish.silent.*: true
       lightvanish.bypass.*: true
+      lightvanish.chest.editing: true
+      lightvanish.settings: true
       lightvanish.show-all: true
 

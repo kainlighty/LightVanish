@@ -11,10 +11,10 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
+import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.API.VanishedPlayer;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
-import ru.kainlight.lightvanish.UTILS.Runnables;
 
 @SuppressWarnings("deprecation")
 public final class PlayerListener implements Listener {
@@ -37,8 +37,10 @@ public final class PlayerListener implements Listener {
     public void onPlayerVanishedJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (ConfigHolder.get().isPreventJoinAndQuitMessage() && LightVanishAPI.get().isVanished(player)) {
-            event.setJoinMessage(null);
+        if (LightVanishAPI.get().isVanished(player)) {
+            if(ConfigHolder.get().isPreventJoinAndQuitMessage()) {
+                event.setJoinMessage(null);
+            }
         }
     }
 
@@ -46,9 +48,15 @@ public final class PlayerListener implements Listener {
     public void onPlayerVanishedQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if (ConfigHolder.get().isPreventJoinAndQuitMessage() && LightVanishAPI.get().isVanished(player)) {
-            Runnables.getMethods().stopTimer(player);
-            event.setQuitMessage(null);
+        if (LightVanishAPI.get().isVanished(player)) {
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings.isTemporary()) {
+                settings.setTemporary(false);
+                settings.getVanishedPlayer().show();
+            }
+            if(ConfigHolder.get().isPreventJoinAndQuitMessage()) {
+                event.setQuitMessage(null);
+            }
         }
     }
 
@@ -57,7 +65,11 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (LightVanishAPI.get().isVanished(player)) {
-            Runnables.getMethods().stopTimer(player);
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings.isTemporary()) {
+                settings.setTemporary(false);
+                settings.getVanishedPlayer().show();
+            }
             player.removePotionEffect(PotionEffectType.NIGHT_VISION);
             player.resetPlayerWeather();
         }
@@ -65,17 +77,25 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     public void onVanishedPlayerAnimation(PlayerAnimationEvent event) {
-        if (ConfigHolder.get().isAnimationsEnabled()) {
-            isVanishedCancelled(event.getPlayer(), event);
+        Player player = event.getPlayer();
+        if(isVanished(player)) {
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings != null && settings.isAnimation()) {
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onVanishedPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(player.hasPermission("lightvanish.bypass.physical")) return;
         if(!event.getAction().equals(Action.PHYSICAL)) return;
-        isVanishedCancelled(player, event);
+        if(isVanished(player)) {
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings != null && settings.isPhysicalActions()) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -97,15 +117,23 @@ public final class PlayerListener implements Listener {
     @EventHandler
     public void onVanishedPlayerPickupItems(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if (player.hasPermission("lightvanish.bypass.pickup")) return;
-        isVanishedCancelled(player, event);
+        if(isVanished(player)) {
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings != null && settings.isPickup()) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
     public void onVanishedPlayerPickupArrow(PlayerPickupArrowEvent event) {
         Player player = event.getPlayer();
-        if (player.hasPermission("lightvanish.bypass.pickup")) return;
-        isVanishedCancelled(player, event);
+        if(isVanished(player)) {
+            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            if(settings != null && settings.isPickup()) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
@@ -163,6 +191,10 @@ public final class PlayerListener implements Listener {
             event.setCancelled(true);
         }
         return event.isCancelled();
+    }
+
+    private boolean isVanished(Player player) {
+        return LightVanishAPI.get().isVanished(player);
     }
 
 

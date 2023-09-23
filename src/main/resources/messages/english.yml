@@ -1,6 +1,7 @@
 player-offline: "&c&l » &fPlayer <username> is offline"
 player-not-found: "&c&l » &fPlayer <username> not found"
 player-protected: "&c&l » &fYou cannot grant or remove vanish to this player"
+has-vanished-before: "&c&l » &fYou have never been in vanished before"
 
 list:
   header: " &m   &9&l VANISHED PLAYERS &r&m   "

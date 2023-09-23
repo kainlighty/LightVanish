@@ -1,9 +1,7 @@
 package ru.kainlight.lightvanish.LISTENERS.silentChest;
 
-import net.kyori.adventure.sound.SoundStop;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +15,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlayer;
+import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 
@@ -35,7 +33,12 @@ public final class silentChestListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onVanishedPlayerOpenableAction(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (!LightVanishAPI.get().isVanished(player) || player.isSneaking() || !event.hasBlock() || !(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+        if (event.isCancelled() || player.isSneaking() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if(!LightVanishAPI.get().isVanished(player)) return;
+
+        Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+        if(settings == null) return;
+        if (!settings.isSilentChest()) return;
 
         Block clickedBlock = event.getClickedBlock();
         Material clickedType = clickedBlock.getType();
@@ -50,7 +53,8 @@ public final class silentChestListener implements Listener {
 
         Inventory inventory = getChestInventory(event.getClickedBlock());
         if (inventory == null) return;
-        boolean isEditing = player.hasPermission("lightvanish.silent.chest.editing");
+
+        boolean isEditing = player.hasPermission("lightvanish.chest.editing");
         SilentChest silentChest = new SilentChest(player, inventory, clickedBlock.getLocation(), false, isEditing);
 
         if (!silentChest.isOpened()) {
@@ -79,8 +83,7 @@ public final class silentChestListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onVanishedPlayerInventoryDrag(InventoryDragEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player) || !LightVanishAPI.get().isVanished(player) || SilentChest.fakeChest.isEmpty())
-            return;
+        if (!(event.getWhoClicked() instanceof Player player) || !LightVanishAPI.get().isVanished(player) || SilentChest.fakeChest.isEmpty()) return;
 
         InventoryType type = event.getInventory().getType();
         if (!isChest(type)) return;

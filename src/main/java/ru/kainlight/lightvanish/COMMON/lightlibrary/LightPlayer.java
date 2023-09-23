@@ -1,6 +1,5 @@
 package ru.kainlight.lightvanish.COMMON.lightlibrary;
 
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -10,8 +9,8 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.UTILS.Parser;
-import ru.kainlight.lightvanish.Main;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -20,11 +19,11 @@ import java.util.List;
 @SuppressWarnings("unused")
 public final class LightPlayer {
 
-    private static final BukkitAudiences audience = BukkitAudiences.create(Main.getInstance());
-    private final Audience sender;
+    private static BukkitAudiences audience;
+    private final CommandSender sender;
 
     private LightPlayer(CommandSender sender) {
-        this.sender = audience.sender(sender);
+        this.sender = sender;
     }
 
     public static LightPlayer of(CommandSender sender) {
@@ -41,7 +40,12 @@ public final class LightPlayer {
                 .clickEvent(ClickEvent.runCommand(command))
                 .hoverEvent(HoverEvent.showText(hoverComponent));
 
-        sender.sendMessage(component);
+        if(audience == null) {
+            sender.sendMessage(component);
+            return;
+        }
+
+        audience.sender(sender).sendMessage(component);
     }
 
     public void sendClickableMessage(String message, String command) {
@@ -50,23 +54,40 @@ public final class LightPlayer {
         Component component = Parser.get().hex(message)
                 .clickEvent(ClickEvent.runCommand(command));
 
-        sender.sendMessage(component);
+        if(audience == null) {
+            sender.sendMessage(component);
+            return;
+        }
+
+        audience.sender(sender).sendMessage(component);
     }
 
     public static void sendMessage(String message, Player... players) {
         if(message == null) return;
 
-        Component messageComponent = Parser.get().hex(message);
+        Component component = Parser.get().hex(message);
         for (Player player : players) {
-            audience.player(player).sendMessage(messageComponent);
+
+            if(audience == null) {
+                player.sendMessage(component);
+                return;
+            } else {
+                audience.player(player).sendMessage(component);
+            }
         }
     }
 
     public void sendMessage(String message) {
         if(message == null) return;
 
-        Component messageComponent = Parser.get().hex(message);
-        sender.sendMessage(messageComponent);
+        Component component = Parser.get().hex(message);
+
+        if(audience == null) {
+            sender.sendMessage(component);
+            return;
+        }
+
+        audience.sender(sender).sendMessage(component);
     }
 
     public void sendMessage(List<String> message) {
@@ -78,48 +99,83 @@ public final class LightPlayer {
     public void sendActionbar(String message) {
         if(message == null) return;
 
-        Component messageComponent = Parser.get().hex(message);
-        sender.sendActionBar(messageComponent);
+        Component component = Parser.get().hex(message);
+
+        if(audience == null) {
+            sender.sendActionBar(component);
+            return;
+        }
+
+        audience.sender(sender).sendActionBar(component);
     }
 
     public void sendHoverMessage(String message, String hover) {
         if(message == null) return;
 
-        Component mainComponent = Parser.get().hex(message);
+        Component component = Parser.get().hex(message);
         Component hoverComponent = Parser.get().hex(hover);
 
-        mainComponent = mainComponent.hoverEvent(HoverEvent.showText(hoverComponent));
-        sender.sendMessage(mainComponent);
+        component = component.hoverEvent(HoverEvent.showText(hoverComponent));
+
+        if(audience == null) {
+            sender.sendMessage(component);
+            return;
+        }
+
+        audience.sender(sender).sendMessage(component);
     }
 
+    @SuppressWarnings("all")
     public void sendTitle(String title, String subtitle, long fadeIn, long stay, long fadeOut) {
         Component titleComponent = Parser.get().hex(title);
         Component subtitleComponent = Parser.get().hex(subtitle);
 
-        Title.Times times = Title.Times.times(Duration.ofSeconds(fadeIn), Duration.ofSeconds(stay), Duration.ofSeconds(fadeOut));
+        Title.Times times = Title.Times.of(Duration.ofSeconds(fadeIn), Duration.ofSeconds(stay), Duration.ofSeconds(fadeOut));
         Title titleToSend = Title.title(titleComponent, subtitleComponent, times);
 
-        sender.showTitle(titleToSend);
+        if(audience == null) {
+            sender.showTitle(titleToSend);
+            return;
+        }
+
+        audience.sender(sender).showTitle(titleToSend);
     }
 
     public void sendTitle(Component title, Component subTitle) {
         Title resultTitle = Title.title(title, subTitle);
-        sender.showTitle(resultTitle);
+        if(audience == null) {
+            sender.showTitle(resultTitle);
+            return;
+        }
+        audience.sender(sender).showTitle(resultTitle);
     }
 
     public void showBossBar(BossBar bossBar) {
-        sender.showBossBar(bossBar);
+        if(audience == null) {
+            sender.showBossBar(bossBar);
+            return;
+        }
+        audience.sender(sender).showBossBar(bossBar);
     }
     public void hideBossBar(BossBar bossBar) {
-        sender.hideBossBar(bossBar);
+        if(audience == null) {
+            sender.hideBossBar(bossBar);
+            return;
+        }
+        audience.sender(sender).hideBossBar(bossBar);
     }
 
     public static void sendMessageForAll(String message) {
         if(message == null) return;
-        Component messageComponent = Parser.get().hex(message);
+        Component component = Parser.get().hex(message);
 
         Bukkit.getServer().getOnlinePlayers().forEach(online -> {
-            audience.player(online).sendMessage(messageComponent);
+
+            if(audience == null) {
+                online.sendMessage(component);
+            } else {
+                audience.player(online).sendMessage(component);
+            }
         });
     }
 
@@ -128,8 +184,12 @@ public final class LightPlayer {
 
         Bukkit.getServer().getOnlinePlayers().forEach(online -> {
             messages.forEach(message -> {
-                Component messageComponent = Parser.get().hex(message);
-                audience.player(online).sendMessage(messageComponent);
+                Component component = Parser.get().hex(message);
+                if(audience == null) {
+                    online.sendMessage(component);
+                } else {
+                    audience.player(online).sendMessage(component);
+                }
             });
         });
     }
@@ -142,8 +202,10 @@ public final class LightPlayer {
         sendMessageForAll(messages);
     }
 
-    public static Audience toAudience(CommandSender sender) {
-        return audience.sender(sender);
+    public static void registerAudience(Plugin plugin) {
+        try {
+            audience = BukkitAudiences.create(plugin);
+        } catch (NoSuchMethodError e) {}
     }
 
 }

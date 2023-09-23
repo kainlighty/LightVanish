@@ -18,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
+import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 
@@ -55,12 +56,15 @@ public final class silentChestComplicatedListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.isCancelled() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Player player = event.getPlayer();
+        if (event.isCancelled() || player.isSneaking() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (!LightVanishAPI.get().isVanished(player)) return;
-        if(player.isSneaking()) return;
-
         UUID playerUUID = player.getUniqueId();
+
+        Settings settings = LightVanishAPI.get().getVanishedSettings().get(playerUUID);
+        if(settings == null) return;
+        if (!settings.isSilentChest()) return;
+
         Block clickedBlock = event.getClickedBlock();
         Material clickedType = clickedBlock.getType();
 
@@ -72,11 +76,11 @@ public final class silentChestComplicatedListener implements Listener {
 
         if (!isChest(clickedType)) return;
 
-        Inventory customInventory = getChestInventory(clickedBlock);
-        if (customInventory == null || customInventory.getSize() % 9 != 0) return;
+        Inventory inventory = getChestInventory(clickedBlock);
+        if (inventory == null || inventory.getSize() % 9 != 0) return;
 
         String chestName = null;
-        if (customInventory instanceof Chest chest) {
+        if (inventory instanceof Chest chest) {
             if (chest.getLootTable() != null) {
                 event.setCancelled(true);
                 return;
@@ -90,17 +94,17 @@ public final class silentChestComplicatedListener implements Listener {
         }
 
         String finalChestName = chestName;
-        Location location = customInventory.getLocation();
+        Location location = inventory.getLocation();
         Inventory inventory2 = SilentChest.fakeChest.values().stream()
                 .filter(chest -> chest.getLocation().equals(location))
                 .findFirst()
                 .map(SilentChest::getInventory)
                 .orElseGet(() -> {
-                    int i = (int) (Math.ceil(customInventory.getSize() / 9.0D) * 9.0D);
+                    int i = (int) (Math.ceil(inventory.getSize() / 9.0D) * 9.0D);
                     Inventory newInventory = finalChestName != null ?
                             plugin.getServer().createInventory(player, i, finalChestName) :
                             plugin.getServer().createInventory(player, i);
-                    newInventory.setContents(customInventory.getContents());
+                    newInventory.setContents(inventory.getContents());
                     return newInventory;
                 });
 

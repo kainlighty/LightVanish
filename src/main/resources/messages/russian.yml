@@ -1,6 +1,7 @@
 player-offline: "&c&l » &fИгрок <username> оффлайн"
 player-not-found: "&c&l » &fИгрок <username> не найден"
 player-protected: "&c&l » &fВы не можете выдать или снять невидиомость этому игроку"
+has-vanished-before: "&c&l » &fВы ранее никогда не были в невидимости"
 
 list:
   header: " &m   &9&l СКРЫТЫЕ ИГРОКИ: &r&m   "

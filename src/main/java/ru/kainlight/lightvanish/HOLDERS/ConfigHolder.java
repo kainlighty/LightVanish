@@ -5,21 +5,20 @@ import ru.kainlight.lightvanish.Main;
 
 import java.util.List;
 
-@SuppressWarnings("all")
 @Getter
 public final class ConfigHolder {
     private ConfigHolder() {}
     private static final ConfigHolder configHolder = new ConfigHolder();
     public static ConfigHolder get() { return configHolder; }
 
-    private boolean preventJoinAndQuitMessage = Main.getInstance().getConfig().getBoolean("abilities.prevent-join-quit-message");
-    private boolean includeInOnlineCount = Main.getInstance().getConfig().getBoolean("abilities.include-in-online-count");
-    private boolean byGroupWeight = Main.getInstance().getConfig().getBoolean("abilities.by-group-weight");
-    private List<String> disabledWorlds = Main.getInstance().getConfig().getStringList("abilities.disabled-worlds");
-    private final boolean animationsEnabled = Main.getInstance().getConfig().getBoolean("abilities.animations");
+    private final boolean preventJoinAndQuitMessage = Main.getInstance().getConfig().getBoolean("abilities.prevent-join-quit-message");
+    private final boolean includeInOnlineCount = Main.getInstance().getConfig().getBoolean("abilities.include-in-online-count");
+    private final boolean byGroupWeight = Main.getInstance().getConfig().getBoolean("abilities.by-group-weight");
+    private final List<String> disabledWorlds = Main.getInstance().getConfig().getStringList("abilities.disabled-worlds");
 
     private final int silentChestMode = Main.getInstance().getConfig().getInt("abilities.silent-chest.mode");
     private final int silentChestUpdateInterval = Main.getInstance().getConfig().getInt("abilities.silent-chest.interval");
+    private final boolean silentChestDoubleOpen = Main.getInstance().getConfig().getBoolean("abilities.silent-chest.double-open");
 
     public List<String> getBlockedPlace() {
         List<String> blockedPlace = Main.getInstance().getConfig().getStringList("abilities.blocked-place");

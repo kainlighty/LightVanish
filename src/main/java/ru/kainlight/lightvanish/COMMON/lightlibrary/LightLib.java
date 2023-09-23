@@ -51,4 +51,22 @@ public final class LightLib {
         return this;
     }
 
+    public static boolean isVersion(String number) {
+        return Bukkit.getServer().getVersion().contains(number);
+    }
+
+    public static boolean higher(double number) {
+        return Integer.parseInt(Bukkit.getServer().getVersion()) >= number;
+    }
+
+    public static boolean isPaper() {
+        try {
+            // Any other works, just the shortest I could find.
+            Class.forName("com.destroystokyo.paper.ParticleBuilder");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
 }

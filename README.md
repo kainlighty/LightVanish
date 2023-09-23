@@ -59,15 +59,10 @@ boolean isVanished(Player player) {
 | lightvanish reload              | None                             | Reload all configurations _(only for console)_       |
 | lightvanish reconfig            | None                             | Update all configurations _(only for console)_       |
 | None                            | lightvanish.use.*                | None                                                 |
-| None                            | lightvanish.silent.chest         | Allow chests to be opened quietly                    |
-| None                            | lightvanish.silent.chest.editing | Allow editing silent chest                           |
-| None                            | lightvanish.silent.*             | None                                                 |
+| None                            | lightvanish.chest.editing        | Allow editing silent chest                           |
 | None                            | lightvanish.bypass.worlds        | Allow to remain invisible in the disabled-worlds     |
 | None                            | lightvanish.bypass.world.<name\> | Allow you to remain invisible in the specified world |
-| None                            | lightvanish.bypass.physical      | Allow pressure plates to be pressed and etc...       |
 | None                            | lightvanish.bypass.place         | Allow blocks place in invisible                      |
-| None                            | lightvanish.bypass.pickup        | Allow pickup items in invisible                      |
-| None                            | lightvanish.bypass.*             | None                                                 |
 | None                            | lightvanish.*                    | All rights                                           |
 
 <details>
@@ -124,6 +119,7 @@ abilities:
     - emerald_block
     - diamond_block
    ```
+
 </details>
 
 <details>
@@ -154,4 +150,5 @@ other:
 sender: "&9&l » &fPlayer <username> unvanished"
 player: "&b&l » &fStaff <username> disable vanish mode for you"
    ```
+
 </details>

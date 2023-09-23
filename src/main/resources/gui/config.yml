@@ -1,0 +1,14 @@
+title: "&7Vanish Settings"
+
+enabled-lore:
+  - '&7Enabled'
+disabled-lore:
+  - '&7Disabled'
+
+names:
+  enable-all: "&c&lENABLE ALL"
+  silent-chest: "&d&lSilent Chest"
+  physical-actions: "&e&lPHYSICAL ACTIONS"
+  animations: "&b&lANIMATIONS"
+  pickups: "&a&lPICKUPS"
+  disable-all: "&c&lRESET"

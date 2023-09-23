@@ -4,9 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.TestOnly;
+import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public final class SilentChest {
@@ -24,6 +28,18 @@ public final class SilentChest {
         this.location = location;
         this.opened = opened;
         this.editing = editing;
+    }
+
+    @TestOnly
+    private void checkDoubleOpened(Inventory inventory, Cancellable event) {
+        if(!ConfigHolder.get().isSilentChestDoubleOpen()) return;
+
+        for (Map.Entry<Player, SilentChest> entry : fakeChest.entrySet()) {
+            if(entry.getValue().getLocation().equals(inventory.getLocation()) && entry.getValue().isOpened()) {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
 }

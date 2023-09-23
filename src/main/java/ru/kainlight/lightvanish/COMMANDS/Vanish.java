@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
+import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.API.VanishedPlayer;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.LightLib;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlayer;
@@ -66,6 +67,19 @@ public final class Vanish implements CommandExecutor {
                 return true;
             }
 
+            case "settings" -> {
+                if (!(sender instanceof Player player) || !player.hasPermission("lightvanish.settings")) return true;
+                Settings settings = LightVanishAPI.get().getVanishedPlayer(player).getSettings();
+                if (settings != null) {
+                    player.openInventory(settings.getMenu());
+                    return true;
+                } else {
+                    String error = plugin.getMessageConfig().getConfig().getString("has-vanished-before");
+                    LightPlayer.of(player).sendMessage(error);
+                    return true;
+                }
+            }
+
             case "show-all", "showall" -> {
                 if (!sender.hasPermission("lightvanish.show-all")) return true;
 
@@ -116,7 +130,7 @@ public final class Vanish implements CommandExecutor {
                         return true;
                     }
 
-                    if(sender instanceof Player hider) {
+                    if (sender instanceof Player hider) {
                         if (HLuckPerms.get().checkGroupWeight(hider.getUniqueId(), player.getUniqueId())) {
                             LightPlayer.of(sender).sendMessage(ConfigHolder.get().playerProtectedMessage().replace("<username>", playerName));
                             return true;
@@ -129,7 +143,7 @@ public final class Vanish implements CommandExecutor {
                         if (args.length == 2) {
                             long seconds = Long.parseLong(args[1]);
                             if (seconds == 0) return true;
-                            Runnables.getMethods().startVanishedTemp(vanishedPlayer, seconds);
+                            Runnables.getMethods().startTemporaryTimer(vanishedPlayer, seconds);
                         }
 
                         LightPlayer.of(player).sendMessage(ConfigHolder.get().vanishEnableForOtherPlayerMessage().replace("<username>", sender.getName()));
@@ -163,11 +177,12 @@ public final class Vanish implements CommandExecutor {
 
             vanisheds.forEach(vanishedPlayer -> {
                 String finalBody = body;
+                Settings settings = vanishedPlayer.getSettings();
 
                 Player player = vanishedPlayer.player();
                 finalBody = finalBody.replace("<username>", player.getName());
-                Long vanishedMinutes = TimeUnit.SECONDS.toMinutes(vanishedPlayer.getVanishedTime());
-                Long vanishedSeconds = TimeUnit.SECONDS.toSeconds(vanishedPlayer.getVanishedTime());
+                Long vanishedMinutes = TimeUnit.SECONDS.toMinutes(settings.getTemporaryTime());
+                Long vanishedSeconds = TimeUnit.SECONDS.toSeconds(settings.getTemporaryTime());
 
                 if (finalBody.contains("<prefix>")) {
                     UUID uuid = player.getUniqueId();
@@ -179,7 +194,7 @@ public final class Vanish implements CommandExecutor {
                         .replace("<minutes>", vanishedMinutes.toString())
                         .replace("<seconds>", vanishedSeconds.toString());
 
-                if (vanishedPlayer.isTemporary()) {
+                if (settings.isTemporary()) {
                     finalBody += "&7 ⧗";
                 }
 
@@ -204,8 +219,7 @@ public final class Vanish implements CommandExecutor {
 
 final class Completer implements TabCompleter {
 
-    Completer() {
-    }
+    Completer() {}
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, Command cmd, String label, String[] args) {
@@ -213,7 +227,7 @@ final class Completer implements TabCompleter {
 
         if (args.length == 1) {
             List<String> players = Bukkit.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
-            List<String> completion = new ArrayList<>(List.of("list", "show-all"));
+            List<String> completion = new ArrayList<>(List.of("list", "settings", "show-all"));
             if (!(sender instanceof Player)) {
                 completion.add("reload");
                 completion.add("reconfig");
