@@ -15,6 +15,11 @@
 6. #### The ability to issue temporary vanished _(this will be indicated by a special symbol in the list and actionbar)_
 7. #### Time in vanished by hovering to the nickname of the player in the list
 8. #### Own menu of abilities
+   <details>
+     <summary>SCREENSHOT</summary>
+      
+   ![image](https://github.com/kainlighty/LightVanish/assets/111251772/dde691c2-dfe9-49f4-878d-2f970fd6007f)
+   </details>
 
 ## › [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
 
