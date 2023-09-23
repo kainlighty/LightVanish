@@ -48,6 +48,9 @@ boolean isVanished(Player player) {
 }
 ```
 
+## › Placeholders:
+- %LightVanish_isVanished%
+
 ## › Commands and Permissions
 
 | Command                         | Permission                       | Description                                          |
