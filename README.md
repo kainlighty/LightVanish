@@ -63,6 +63,7 @@ boolean isVanished(Player player) {
 | None                            | lightvanish.bypass.worlds        | Allow to remain invisible in the disabled-worlds     |
 | None                            | lightvanish.bypass.world.<name\> | Allow you to remain invisible in the specified world |
 | None                            | lightvanish.bypass.place         | Allow blocks place in invisible                      |
+| None                            | lightvanish.bypass.*             | None                                                 |
 | None                            | lightvanish.*                    | All rights                                           |
 
 <details>
@@ -128,6 +129,7 @@ abilities:
 ```
 player-offline: "&c&l » &fPlayer <username> is offline"
 player-not-found: "&c&l » &fPlayer <username> not found"
+has-vanished-before: "&c&l » &fYou have never been in vanished before"
 
 list:
 header: " &m   &9&l VANISHED PLAYERS &r&m   "
