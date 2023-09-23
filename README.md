@@ -7,13 +7,37 @@
 ## › Features:
 
 1. #### Hiding by group weight: Multi-level invisibility support
-2. #### Hiding in the online count in server list _for paper_
+2. #### Hiding in the online count in server list _(for paper)_
 3. #### Hiding sounds and actions
-   _Example: chest, block, doors sound(not everything yet and only paper), and etc..._
+   _Example: chest, block, doors sound, etc..._
 4. #### Prohibition on break of the specified blocks
 5. #### Disabling invisibility in certain worlds
+6. #### The ability to issue temporary vanished _(this will be indicated by a special symbol in the list and actionbar)_
+7. #### Time in vanished by hovering to the nickname of the player in the list
+8. #### Own menu of abilities
 
 ## › [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
+
+<details>
+  <summary>HOW INSTALL?</summary>
+
+> #### At the moment there is no way to add to the repository
+1. #### Download the plugin JAR file
+2. #### Add it to the dependencies:
+
+```
+-> ${basedir} - project folder
+      
+<dependency>
+    <groupId>ru.kainlight</groupId>
+    <artifactId>LightVanish</artifactId>
+    <version>LATEST</version>
+    <scope>system</scope>
+    <systemPath>${basedir}/lib/LightVanish.jar</systemPath>
+</dependency>
+```
+3. #### in Artifacts, remove it from the compilation
+</details>
 
 ### _PlayerHideEvent:_
 
@@ -49,6 +73,7 @@ boolean isVanished(Player player) {
 ```
 
 ## › Placeholders:
+
 - %LightVanish_isVanished%
 
 ## › Commands and Permissions
