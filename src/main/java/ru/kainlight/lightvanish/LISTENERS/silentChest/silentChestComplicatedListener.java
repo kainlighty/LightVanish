@@ -57,7 +57,7 @@ public final class silentChestComplicatedListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (event.isCancelled() || player.isSneaking() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.isCancelled() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (!LightVanishAPI.get().isVanished(player)) return;
         UUID playerUUID = player.getUniqueId();
 
@@ -112,7 +112,7 @@ public final class silentChestComplicatedListener implements Listener {
         player.openInventory(inventory2);
         sleep.put(playerUUID, System.currentTimeMillis() + 100L);
 
-        final boolean isEditing = player.hasPermission("lightvanish.silent.chest.editing");
+        final boolean isEditing = player.hasPermission("lightvanish.chest.editing");
         SilentChest silentChest = new SilentChest(player, inventory2, location, true, isEditing);
         SilentChest.fakeChest.put(player, silentChest);
     }

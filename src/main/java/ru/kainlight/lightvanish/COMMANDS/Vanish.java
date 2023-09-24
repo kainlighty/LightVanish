@@ -69,7 +69,7 @@ public final class Vanish implements CommandExecutor {
 
             case "settings" -> {
                 if (!(sender instanceof Player player) || !player.hasPermission("lightvanish.settings")) return true;
-                Settings settings = LightVanishAPI.get().getVanishedPlayer(player).getSettings();
+                Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
                 if (settings != null) {
                     player.openInventory(settings.getMenu());
                     return true;

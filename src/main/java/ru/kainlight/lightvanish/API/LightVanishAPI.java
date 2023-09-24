@@ -42,6 +42,10 @@ public final class LightVanishAPI {
         }
     }
 
+    public Settings getVanishedSettings(UUID uuid) {
+        return vanishedSettings.get(uuid);
+    }
+
     public boolean isVanished(Player player) {
         if(player == null) return false;
         return LightVanishAPI.get().getOnlineVanishedPlayers().contains(getVanishedPlayer(player));

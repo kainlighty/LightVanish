@@ -70,7 +70,7 @@
 - #### LightVanishAPI.showAll();
 
 ``` 
-Check for invisibility without using API:
+Check for vanished without using API:
 
 boolean isVanished(Player player) {
     return player.hasMetadata("vanished");

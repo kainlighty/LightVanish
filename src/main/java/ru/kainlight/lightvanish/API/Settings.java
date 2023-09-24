@@ -7,9 +7,8 @@ import org.bukkit.inventory.Inventory;
 @Getter @Setter
 public final class Settings {
 
-
     private final VanishedPlayer vanishedPlayer;
-    private Inventory menu;
+    private final Inventory menu;
     private boolean temporary, animation, pickup, silentChest, physicalActions = false;
     private long temporaryTime = 0L;
 
