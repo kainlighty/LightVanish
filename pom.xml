@@ -53,6 +53,12 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.kyori</pattern>
+                                    <shadedPattern>${project.groupId}.shaded.net.kyori</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -74,10 +80,6 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>sonatype</id>
-            <url>"https://s01.oss.sonatype.org/content/groups/public/"</url>
         </repository>
         <repository>
             <id>placeholderapi</id>

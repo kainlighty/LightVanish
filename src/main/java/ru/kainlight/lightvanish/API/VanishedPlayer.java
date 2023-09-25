@@ -46,18 +46,17 @@ public final class VanishedPlayer {
     public void hide() {
         if (callHideEvent()) return;
         if (ConfigHolder.get().getDisabledWorlds().contains(hider.getWorld().getName())) return;
-
         UUID hiderUUID = hider.getUniqueId();
-        enableEffects();
 
         if (!hider.hasMetadata("vanished")) {
-            LightVanishAPI.get().getVanishedSettings().putIfAbsent(hiderUUID, new Settings(this, new SettingsGUI(plugin).create(hider)));
+            LightVanishAPI.get().getAllSettings().putIfAbsent(hiderUUID, new VanishedSettings(this, new SettingsGUI(plugin).create(hider)));
             LightVanishAPI.get().getAllVanished().putIfAbsent(hiderUUID, this);
 
             hider.setMetadata("vanished", new FixedMetadataValue(plugin, true));
             Runnables.getMethods().startActionbar(this);
         }
 
+        enableEffects();
         getViewers().forEach(online -> {
             UUID onlineUUID = online.getUniqueId();
 
@@ -72,7 +71,7 @@ public final class VanishedPlayer {
     }
 
     public void show() {
-        if (!LightVanishAPI.get().isVanished(hider)) return;
+        if (!LightVanishAPI.get().isVanished(hider.getUniqueId())) return;
         if (callShowEvent()) return;
 
         disableEffects();
@@ -92,8 +91,8 @@ public final class VanishedPlayer {
         return LightVanishAPI.get().isVanished(player());
     }
 
-    public Settings getSettings() {
-        return LightVanishAPI.get().getVanishedSettings().get(hider.getUniqueId());
+    public VanishedSettings getSettings() {
+        return LightVanishAPI.get().getAllSettings().get(hider.getUniqueId());
     }
 
 
@@ -101,14 +100,12 @@ public final class VanishedPlayer {
     private void enableEffects() {
         hider.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, PotionEffect.INFINITE_DURATION, 1, false, false));
         hider.setPlayerWeather(WeatherType.CLEAR);
-        hider.setInvulnerable(true);
     }
 
     @Internal
     private void disableEffects() {
         hider.removePotionEffect(PotionEffectType.NIGHT_VISION);
         hider.resetPlayerWeather();
-        hider.setInvulnerable(false);
     }
 
     @Internal

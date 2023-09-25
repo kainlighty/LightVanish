@@ -14,7 +14,8 @@
 5. #### Disabling invisibility in certain worlds
 6. #### The ability to issue temporary vanished _(this will be indicated by a special symbol in the list and actionbar)_
 7. #### Time in vanished by hovering to the nickname of the player in the list
-8. #### Own menu of abilities
+8. #### No hunger, no entity target and damage
+9. #### Own menu of abilities
    <details>
      <summary>SCREENSHOT</summary>
       
@@ -64,6 +65,7 @@
 
 - #### LightVanishAPI.getAllVanished();
 - #### LightVanishAPI.getVanishedPlayers();
+- #### LightVanishAPI.getVanishedSettings();
 - #### LightVanishAPI.getVanishedPlayer():
   #### player(), toggle(), hide(), show(), isTemporary(), getViewers()
 - #### LightVanishAPI.isVanished();

@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.API.Settings;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 
@@ -36,7 +36,7 @@ public final class silentChestListener implements Listener {
         if (event.isCancelled() || player.isSneaking() || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if(!LightVanishAPI.get().isVanished(player)) return;
 
-        Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+        VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
         if(settings == null) return;
         if (!settings.isSilentChest()) return;
 

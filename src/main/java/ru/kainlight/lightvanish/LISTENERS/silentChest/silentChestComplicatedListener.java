@@ -18,7 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.API.Settings;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 
@@ -61,7 +61,7 @@ public final class silentChestComplicatedListener implements Listener {
         if (!LightVanishAPI.get().isVanished(player)) return;
         UUID playerUUID = player.getUniqueId();
 
-        Settings settings = LightVanishAPI.get().getVanishedSettings().get(playerUUID);
+        VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(playerUUID);
         if(settings == null) return;
         if (!settings.isSilentChest()) return;
 

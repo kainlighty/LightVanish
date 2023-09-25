@@ -5,8 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
-import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.API.VanishedPlayer;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlayer;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
@@ -28,7 +28,7 @@ public final class Runnables {
 
         int id = Bukkit.getServer().getScheduler().runTaskTimer(Main.getInstance(), () -> {
             if(player != null) {
-                Settings settings = vanishedPlayer.getSettings();
+                VanishedSettings settings = vanishedPlayer.getSettings();
 
                 long vanishedTime = settings.getTemporaryTime();
                 vanishedTime = vanishedTime + 1;
@@ -48,7 +48,7 @@ public final class Runnables {
         vanishedPlayer.getSettings().setTemporaryTime(seconds);
 
         Bukkit.getServer().getScheduler().runTaskLater(Main.getInstance(), () -> {
-            Settings settings = vanishedPlayer.getSettings();
+            VanishedSettings settings = vanishedPlayer.getSettings();
             if(!settings.isTemporary()) return;
             vanishedPlayer.show();
             settings.setTemporary(false);

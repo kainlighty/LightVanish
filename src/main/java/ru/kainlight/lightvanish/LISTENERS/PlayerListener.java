@@ -11,8 +11,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffectType;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.API.VanishedPlayer;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
 import ru.kainlight.lightvanish.Main;
 
@@ -49,7 +49,7 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (LightVanishAPI.get().isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings.isTemporary()) {
                 settings.setTemporary(false);
                 settings.getVanishedPlayer().show();
@@ -65,7 +65,7 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
 
         if (LightVanishAPI.get().isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings.isTemporary()) {
                 settings.setTemporary(false);
                 settings.getVanishedPlayer().show();
@@ -79,7 +79,7 @@ public final class PlayerListener implements Listener {
     public void onVanishedPlayerAnimation(PlayerAnimationEvent event) {
         Player player = event.getPlayer();
         if(isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings != null && settings.isAnimation()) {
                 event.setCancelled(true);
             }
@@ -91,7 +91,7 @@ public final class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if(!event.getAction().equals(Action.PHYSICAL)) return;
         if(isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings != null && settings.isPhysicalActions()) {
                 event.setCancelled(true);
             }
@@ -118,7 +118,7 @@ public final class PlayerListener implements Listener {
     public void onVanishedPlayerPickupItems(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if(isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings != null && settings.isPickup()) {
                 event.setCancelled(true);
             }
@@ -129,7 +129,7 @@ public final class PlayerListener implements Listener {
     public void onVanishedPlayerPickupArrow(PlayerPickupArrowEvent event) {
         Player player = event.getPlayer();
         if(isVanished(player)) {
-            Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+            VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
             if(settings != null && settings.isPickup()) {
                 event.setCancelled(true);
             }
@@ -156,6 +156,12 @@ public final class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerVanishedDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        isVanishedCancelled(player, event);
+    }
+
+    @EventHandler
+    public void onPlayerVanishedDamage(EntityDamageByBlockEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         isVanishedCancelled(player, event);
     }

@@ -3,20 +3,26 @@ package ru.kainlight.lightvanish.GUI;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.API.Settings;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.BUILDERS.InventoryBuilder;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.BUILDERS.ItemBuilder;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.UTILS.Parser;
 import ru.kainlight.lightvanish.Main;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public final class SettingsGUI {
+public final class SettingsGUI implements Listener {
 
     private final Main plugin;
 
@@ -26,7 +32,7 @@ public final class SettingsGUI {
 
     public Inventory create(@NotNull Player player) {
         String title = Parser.get().hexString(plugin.getGuiConfig().getConfig().getString("title"));
-        InventoryBuilder builder = new InventoryBuilder(plugin, player, 5 * 9, title, true);
+        InventoryBuilder builder = new InventoryBuilder(plugin, player, 5 * 9, title, false);
 
         ItemStack enableAllItem = new ItemBuilder(Material.BELL)
                 .displayName(getAbilityName("enable-all")).defaultFlags()
@@ -43,7 +49,7 @@ public final class SettingsGUI {
         ItemStack silentChestItem = new ItemBuilder(Material.CHEST_MINECART)
                 .displayName(getAbilityName("silent-chest")).defaultFlags()
                 .build();
-        ItemStack resetItem = new ItemBuilder(Material.BARRIER)
+        ItemStack disableAllItem = new ItemBuilder(Material.BARRIER)
                 .displayName(getAbilityName("disable-all")).defaultFlags()
                 .build();
 
@@ -52,60 +58,57 @@ public final class SettingsGUI {
                 13, // enable all
                 21, 22, 23, 31, // abilities
                 40, // disable all
-                25 // misc border
+                25// misc border
         ));
         ItemStack miscBorder = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).defaultFlags().displayName(" ").build();
-        LinkedList<ItemStack> items = new LinkedList<>(List.of(miscBorder, enableAllItem, physicalActionsItem, animationsItem, pickupsItem, silentChestItem, resetItem, miscBorder));
+        LinkedList<ItemStack> items = new LinkedList<>(List.of(miscBorder, enableAllItem, physicalActionsItem, animationsItem, pickupsItem, silentChestItem, disableAllItem, miscBorder));
         builder.fillBorder(Material.GRAY_STAINED_GLASS_PANE, true);
         builder.setItems(slots, items);
-
-        registerClickEvent(player.getUniqueId(), builder);
 
         return builder.build();
     }
 
-    private void registerClickEvent(UUID playerUUID, InventoryBuilder builder) {
-        builder.clickEvent(event -> {
-            Settings settings = LightVanishAPI.get().getVanishedSettings(playerUUID);
-            if(settings == null) {
-                event.setCancelled(true);
-                return;
-            }
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        VanishedSettings settings = LightVanishAPI.get().getSettings(player.getUniqueId());
+        if(settings == null) return;
+        if(!event.getInventory().equals(settings.getMenu())) return;
 
-            Player whoClicked = (Player) event.getWhoClicked();
-            ItemStack clickedItem = event.getCurrentItem();
-            if (clickedItem == null || clickedItem.getType() == Material.AIR) {
-                event.setCancelled(true);
-                return;
-            }
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
-            int slot = event.getSlot();
-            if (slot == 13) {
-                settings.enableAll();
-                updateItem(whoClicked, false, 21, 22, 23, 31);
-            } else if (slot == 21) {
-                settings.setPhysicalActions(!settings.isPhysicalActions());
-                updateItem(whoClicked, slot, !settings.isPhysicalActions());
-            } else if (slot == 2) {
-                settings.setAnimation(!settings.isAnimation());
-                updateItem(whoClicked, slot, !settings.isAnimation());
-            } else if (slot == 23) {
-                settings.setPickup(!settings.isPickup());
-                updateItem(whoClicked, slot, !settings.isPickup());
-            } else if (slot == 31) {
-                settings.setSilentChest(!settings.isSilentChest());
-                updateItem(whoClicked, slot, !settings.isSilentChest());
-            } else if (slot == 40) {
-                settings.disableAll();
-                updateItem(whoClicked, true, 21, 22, 23, 31);
-            }
-
+        int slot = event.getSlot();
+        boolean status = false;
+        if (slot == 13) {
+            settings.enableAll();
+            updateItem(player, false, 21, 22, 23, 31);
+        } else if (slot == 21) {
+            status = settings.isPhysicalActions();
+            settings.setPhysicalActions(!status);
+        } else if (slot == 22) {
+            status = settings.isAnimation();
+            settings.setAnimation(!status);
+        } else if (slot == 23) {
+            status = settings.isPickup();
+            settings.setPickup(!status);
+        } else if (slot == 31) {
+            status = settings.isSilentChest();
+            settings.setSilentChest(!status);
+        } else if (slot == 40) {
+            settings.disableAll();
+            updateItem(player, false, 21, 22, 23, 31);
+        } else {
             event.setCancelled(true);
-        });
+            return;
+        }
+
+        updateItem(player, slot, status);
+        event.setCancelled(true);
     }
 
     private void updateItem(@NotNull Player player, int slot, boolean enabled) {
-        Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+        VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
         if (settings == null) return;
         Inventory inventory = settings.getMenu();
 

@@ -8,7 +8,7 @@ disabled-lore:
 names:
   enable-all: "&c&lENABLE ALL"
   silent-chest: "&d&lSilent Chest"
-  physical-actions: "&e&lPHYSICAL ACTIONS"
-  animations: "&b&lANIMATIONS"
-  pickups: "&a&lPICKUPS"
+  physical-actions: "&e&lNO PHYSICAL ACTIONS"
+  animations: "&b&lNO ANIMATIONS"
+  pickups: "&a&lNO PICKUPS"
   disable-all: "&c&lRESET"

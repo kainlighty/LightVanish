@@ -9,8 +9,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
-import ru.kainlight.lightvanish.API.Settings;
 import ru.kainlight.lightvanish.API.VanishedPlayer;
+import ru.kainlight.lightvanish.API.VanishedSettings;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.LightLib;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlayer;
 import ru.kainlight.lightvanish.HOLDERS.ConfigHolder;
@@ -52,6 +52,11 @@ public final class Vanish implements CommandExecutor {
         }
 
         switch (args[0].toLowerCase()) {
+            case "test" -> {
+                boolean a = Boolean.parseBoolean(args[1]);
+                Player player = (Player) sender;
+                player.setCanPickupItems(a);
+            }
             case "list" -> {
                 if (!sender.hasPermission("lightvanish.list")) return true;
 
@@ -69,7 +74,7 @@ public final class Vanish implements CommandExecutor {
 
             case "settings" -> {
                 if (!(sender instanceof Player player) || !player.hasPermission("lightvanish.settings")) return true;
-                Settings settings = LightVanishAPI.get().getVanishedSettings().get(player.getUniqueId());
+                VanishedSettings settings = LightVanishAPI.get().getAllSettings().get(player.getUniqueId());
                 if (settings != null) {
                     player.openInventory(settings.getMenu());
                     return true;
@@ -177,7 +182,7 @@ public final class Vanish implements CommandExecutor {
 
             vanisheds.forEach(vanishedPlayer -> {
                 String finalBody = body;
-                Settings settings = vanishedPlayer.getSettings();
+                VanishedSettings settings = vanishedPlayer.getSettings();
 
                 Player player = vanishedPlayer.player();
                 finalBody = finalBody.replace("<username>", player.getName());

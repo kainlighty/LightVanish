@@ -6,10 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +20,7 @@ public final class InventoryBuilder implements Listener, Cloneable {
     private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
     private List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
+    private List<Consumer<InventoryDragEvent>> dragHandlers = new ArrayList<>();
     private List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
 
     public InventoryBuilder(Plugin plugin, int size, boolean event) {
@@ -65,8 +63,8 @@ public final class InventoryBuilder implements Listener, Cloneable {
         if(event) Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public InventoryBuilder(Plugin plugin, Component title, boolean event) {
-        inventory = Bukkit.createInventory(null, 27, title);
+    public InventoryBuilder(Plugin plugin, Component title, int size, boolean event) {
+        inventory = Bukkit.createInventory(null, size, title);
         if(event) Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -106,30 +104,36 @@ public final class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder clickEvent(Consumer<InventoryClickEvent> onInventoryClick) {
-        clickHandlers.add(onInventoryClick);
+    public InventoryBuilder dragEvent(Consumer<InventoryDragEvent> event) {
+        dragHandlers.add(event);
         return this;
     }
 
-    public InventoryBuilder clickEvent(List<Integer> slots, Consumer<InventoryClickEvent> onItemClick) {
-        slots.forEach(slot -> {
-            itemHandlers.put(slot, onItemClick);
-        });
+    public InventoryBuilder clickEvent(Consumer<InventoryClickEvent> event) {
+        clickHandlers.add(event);
         return this;
     }
 
-    public InventoryBuilder clickEvent(int slot, Consumer<InventoryClickEvent> onItemClick) {
-        itemHandlers.put(slot, onItemClick);
+    public InventoryBuilder clickEvent(Consumer<InventoryClickEvent> event, Integer... slots) {
+        Iterator<Integer> iterator = Arrays.stream(slots).iterator();
+        while (iterator.hasNext()) {
+            itemHandlers.put(iterator.next(), event);
+        }
         return this;
     }
 
-    public InventoryBuilder openEvent(Consumer<InventoryOpenEvent> onOpen) {
-        openHandlers.add(onOpen);
+    public InventoryBuilder clickEvent(int slot, Consumer<InventoryClickEvent> event) {
+        itemHandlers.put(slot, event);
         return this;
     }
 
-    public InventoryBuilder closeEvent(Consumer<InventoryCloseEvent> onClose) {
-        closeHandlers.add(onClose);
+    public InventoryBuilder openEvent(Consumer<InventoryOpenEvent> event) {
+        openHandlers.add(event);
+        return this;
+    }
+
+    public InventoryBuilder closeEvent(Consumer<InventoryCloseEvent> event) {
+        closeHandlers.add(event);
         return this;
     }
 
@@ -142,13 +146,11 @@ public final class InventoryBuilder implements Listener, Cloneable {
         int size = rows ? inventory.getSize() / 9 : inventory.getSize();
         ItemStack glassPane = new ItemBuilder(material).defaultFlags().displayName(" ").build();
 
-        // Заполнение верхнего и нижнего ряда стеклянными панелями
         for (int i = 0; i < 9; i++) {
             inventory.setItem(i, glassPane); // Верхний ряд
             inventory.setItem((size - 1) * 9 + i, glassPane); // Нижний ряд
         }
 
-        // Заполнение левого и правого столбца стеклянными панелями
         for (int i = 1; i < size - 1; i++) {
             inventory.setItem(i * 9, glassPane); // Левый столбец
             inventory.setItem(i * 9 + 8, glassPane); // Правый столбец
@@ -172,6 +174,12 @@ public final class InventoryBuilder implements Listener, Cloneable {
     }
 
     @EventHandler
+    private void handleDrag(InventoryDragEvent event) {
+        if (!event.getInventory().equals(inventory)) return;
+        dragHandlers.forEach(c -> c.accept(event));
+    }
+
+    @EventHandler
     private void handleOpen(InventoryOpenEvent event) {
         if (!event.getInventory().equals(inventory)) return;
         openHandlers.forEach(c -> c.accept(event));
@@ -188,6 +196,7 @@ public final class InventoryBuilder implements Listener, Cloneable {
         try {
             InventoryBuilder clone = (InventoryBuilder) super.clone();
             clone.clickHandlers = this.clickHandlers;
+            clone.dragHandlers = this.dragHandlers;
             clone.inventory = this.inventory;
             clone.itemHandlers = this.itemHandlers;
             clone.openHandlers = this.openHandlers;

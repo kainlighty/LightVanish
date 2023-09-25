@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
+
 @Getter
 public final class LightVanishAPI {
 
@@ -24,7 +25,7 @@ public final class LightVanishAPI {
     }
 
     private final Map<UUID, VanishedPlayer> allVanished = new HashMap<>();
-    private final Map<UUID, Settings> vanishedSettings = new HashMap<>();
+    private final Map<UUID, VanishedSettings> allSettings = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     public Set<VanishedPlayer> getOnlineVanishedPlayers() {
@@ -42,8 +43,8 @@ public final class LightVanishAPI {
         }
     }
 
-    public Settings getVanishedSettings(UUID uuid) {
-        return vanishedSettings.get(uuid);
+    public VanishedSettings getSettings(UUID uuid) {
+        return allSettings.get(uuid);
     }
 
     public boolean isVanished(Player player) {
@@ -58,9 +59,6 @@ public final class LightVanishAPI {
     public void showAll() {
         getOnlineVanishedPlayers().forEach(VanishedPlayer::show);
     }
-
-
-
 
 
 
@@ -91,7 +89,7 @@ public final class LightVanishAPI {
             return LightVanishAPI.get().isVanished(player);
         }
 
-        public Settings getSettings() {
+        public VanishedSettings getSettings() {
             return getVanishedPlayer().getSettings();
         }
 
@@ -132,7 +130,7 @@ public final class LightVanishAPI {
             return LightVanishAPI.get().isVanished(player);
         }
 
-        public Settings getSettings() {
+        public VanishedSettings getSettings() {
             return getVanishedPlayer().getSettings();
         }
 
