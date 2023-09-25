@@ -65,7 +65,7 @@
 
 - #### LightVanishAPI.getAllVanished();
 - #### LightVanishAPI.getVanishedPlayers();
-- #### LightVanishAPI.getVanishedSettings();
+- #### LightVanishAPI.getSettings();
 - #### LightVanishAPI.getVanishedPlayer():
   #### player(), toggle(), hide(), show(), isTemporary(), getViewers()
 - #### LightVanishAPI.isVanished();
