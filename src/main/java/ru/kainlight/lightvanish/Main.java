@@ -1,11 +1,12 @@
 package ru.kainlight.lightvanish;
 
 import lombok.Getter;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import ru.kainlight.lightvanish.API.LightVanishAPI;
 import ru.kainlight.lightvanish.COMMANDS.Vanish;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.CONFIGS.BukkitConfig;
+import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlayer;
+import ru.kainlight.lightvanish.COMMON.lightlibrary.LightPlugin;
 import ru.kainlight.lightvanish.COMMON.lightlibrary.UTILS.Initiators;
 import ru.kainlight.lightvanish.GUI.SettingsGUI;
 import ru.kainlight.lightvanish.HOOKS.PlaceholderAPI.HPlaceholderAPI;
@@ -15,19 +16,17 @@ import ru.kainlight.lightvanish.LISTENERS.silentChest.silentChestListener;
 
 @Getter
 @Internal
-public final class Main extends JavaPlugin {
+public final class Main extends LightPlugin {
 
     @Getter
     private static Main instance;
 
-    public BukkitConfig messageConfig;
     @Getter private BukkitConfig guiConfig;
 
     @Override
     public void onLoad() {
-        this.saveDefaultConfig();
-        BukkitConfig.saveLanguages(this, "language");
         this.guiConfig = new BukkitConfig(this, "gui", "config.yml");
+        guiConfig.updateConfig();
     }
 
     @Override

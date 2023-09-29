@@ -105,19 +105,6 @@ public final class Vanish implements CommandExecutor {
                 return true;
             }
 
-            case "reconfig" -> {
-                if (sender instanceof Player) return true;
-                plugin.saveDefaultConfig();
-                plugin.getMessageConfig().saveDefaultConfig();
-
-                LightLib.get().updateConfig(plugin);
-                plugin.getMessageConfig().updateConfig();
-
-                plugin.getLogger().info("Configurations updated");
-                plugin.getLogger().warning("If the hints have been removed, you can view them on the Github");
-                return true;
-            }
-
             default -> {
                 if (args.length == 1 || args.length == 2 && sender.hasPermission("lightvanish.use.other") && checkCmd(args[0])) { // ? Other vanish
                     String playerName = args[0];
@@ -235,7 +222,6 @@ final class Completer implements TabCompleter {
             List<String> completion = new ArrayList<>(List.of("list", "settings", "show-all"));
             if (!(sender instanceof Player)) {
                 completion.add("reload");
-                completion.add("reconfig");
             }
             completion.addAll(players);
 

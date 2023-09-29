@@ -1,3 +1,4 @@
+config-version: 1.0
 # Only when the server loading
 update-notification: true
 

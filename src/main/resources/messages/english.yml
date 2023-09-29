@@ -1,3 +1,5 @@
+config-version: 1.0
+
 player-offline: "&c&l » &fPlayer <username> is offline"
 player-not-found: "&c&l » &fPlayer <username> not found"
 player-protected: "&c&l » &fYou cannot grant or remove vanish to this player"
