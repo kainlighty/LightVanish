@@ -1,7 +1,7 @@
 name: LightVanish
 version: '${project.version}'
 main: ru.kainlight.lightvanish.Main
-api-version: 1.16
+api-version: 1.17
 author: kainlight
 depend: [LuckPerms]
 softdepend: [PlaceholderAPI]

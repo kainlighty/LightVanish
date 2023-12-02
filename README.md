@@ -18,32 +18,25 @@
 9. #### Own menu of abilities
    <details>
      <summary>SCREENSHOT</summary>
-      
+
    ![image](https://github.com/kainlighty/LightVanish/assets/111251772/dde691c2-dfe9-49f4-878d-2f970fd6007f)
    </details>
 
 ## › [API:](https://github.com/kainlighty/LightVanish/tree/main/src/main/java/ru/kainlight/lightvanish/API)
 
-<details>
-  <summary>HOW INSTALL?</summary>
-
-> #### At the moment there is no way to add to the repository
-1. #### Download the plugin JAR file
-2. #### Add it to the dependencies:
-
 ```
--> ${basedir} - project folder
-      
+<repository>
+   <id>jitpack.io</id>
+   <url>https://jitpack.io</url>
+</repository>
+
 <dependency>
-    <groupId>ru.kainlight</groupId>
+    <groupId>com.github.kainlighty</groupId>
     <artifactId>LightVanish</artifactId>
-    <version>LATEST</version>
-    <scope>system</scope>
-    <systemPath>${basedir}/lib/LightVanish.jar</systemPath>
+    <version>1.3.0</version>
+    <scope>provided</scope>
 </dependency>
 ```
-3. #### in Artifacts, remove it from the compilation
-</details>
 
 ### _PlayerHideEvent:_
 

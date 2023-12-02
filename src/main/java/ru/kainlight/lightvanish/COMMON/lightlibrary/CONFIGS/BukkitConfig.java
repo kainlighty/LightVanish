@@ -132,10 +132,11 @@ public final class BukkitConfig {
 
     @SuppressWarnings("all")
     public void updateConfig() {
-        Double version = getConfig().getDouble("config-version");
-        if(version != null && version == CONFIG_VERSION) return;
         // Загрузка текущей конфигурации
         FileConfiguration userConfig = this.getConfig();
+        // Загрузка текущей конфигурации
+        double version = userConfig.getDouble("config-version");
+        if(version == CONFIG_VERSION) return;
 
         InputStream defaultConfigStream;
         // Чтение конфигурации по умолчанию из JAR-файла
